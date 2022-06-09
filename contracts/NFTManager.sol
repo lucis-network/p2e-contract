@@ -1,9 +1,11 @@
-//SPDX-License-Identifier: Unlicense
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract NFTManager {
+contract NFTManager is Context, AccessControl, Ownable {
     // event
     event EquipNFT(address indexed owner, uint256 tokenId);
     event WithdrawNFT(address indexed owner, uint256 tokenId);
@@ -14,12 +16,28 @@ contract NFTManager {
     );
     // variables
     IERC721 private nft;
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     // mapping
     mapping(address => uint256[]) public pools;
 
+    // mapping(address => mapping(address => uint256[])) public poolsInvestor;
+
     // function
     constructor(address _nftContract) {
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(MINTER_ROLE, _msgSender());
+
         nft = IERC721(_nftContract);
+    }
+
+    function setupMinterRole(address account, bool _enable) external {
+        require(account != address(0), "ADDRESS_INVALID");
+        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "NOT_PERMISSION");
+        if (_enable) {
+            _setupRole(MINTER_ROLE, account);
+        } else {
+            _revokeRole(MINTER_ROLE, account);
+        }
     }
 
     function getAllNFT(address user)
@@ -29,6 +47,16 @@ contract NFTManager {
     {
         return pools[user];
     }
+
+    // function approveToGamer(address gamer, uint256 tokenId) external {
+    //     address investor = msg.sender;
+    //     require(tokenId != 0, "ManageNFT: tokenId is zero");
+
+    //     nft.transferFrom(investor, address(this), tokenId);
+
+    //     poolsInvestor[investor][gamer].push(tokenId);
+
+    // }
 
     function equipNFT(uint256 tokenId) external {
         address user = msg.sender;

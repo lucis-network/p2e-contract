@@ -6,7 +6,7 @@ describe("NFTManager contract", function () {
   let nft: Contract;
   let nftManager: Contract;
   beforeEach(async () => {
-    const NFT = await ethers.getContractFactory("NFT");
+    const NFT = await ethers.getContractFactory("LucisNFT");
     nft = await NFT.deploy();
 
     const NFTManager = await ethers.getContractFactory("NFTManager");
@@ -14,11 +14,12 @@ describe("NFTManager contract", function () {
   })
   it("equipNFT success", async function () {
     const [player] = await ethers.getSigners();
-    await nft.connect(player).mint(1);
-    await nft.connect(player).mint(2);
-    await nft.connect(player).mint(3);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
-    await nft.connect(player).setApprovalForAll(nftManager.address, true);
+
+    await nft.setApprovalForAll(nftManager.address, true);
     await nftManager.connect(player).equipNFT(1);
     await nftManager.connect(player).equipNFT(2);
     await nftManager.connect(player).equipNFT(3);
@@ -31,11 +32,11 @@ describe("NFTManager contract", function () {
 
   it("withdraw success", async function () {
     const [player] = await ethers.getSigners();
-    await nft.connect(player).mint(1);
-    await nft.connect(player).mint(2);
-    await nft.connect(player).mint(3);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
-    await nft.connect(player).setApprovalForAll(nftManager.address, true);
+    await nft.setApprovalForAll(nftManager.address, true);
     await nftManager.connect(player).equipNFT(1);
     await nftManager.connect(player).equipNFT(2);
     await nftManager.connect(player).equipNFT(3);
@@ -62,11 +63,11 @@ describe("NFTManager contract", function () {
 
   it("changes NFT success", async function () {
     const [player] = await ethers.getSigners();
-    await nft.connect(player).mint(1);
-    await nft.connect(player).mint(2);
-    await nft.connect(player).mint(3);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
-    await nft.connect(player).setApprovalForAll(nftManager.address, true);
+    await nft.setApprovalForAll(nftManager.address, true);
     await nftManager.connect(player).equipNFT(1);
     await nftManager.connect(player).equipNFT(2);
 
@@ -89,10 +90,11 @@ describe("NFTManager contract", function () {
 
   it("Revert when nft not in pool", async () => {
     const [player] = await ethers.getSigners();
-    await nft.connect(player).mint(1);
-    await nft.connect(player).mint(2);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    await nft.mintToken(player.address, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
-    await nft.connect(player).setApprovalForAll(nftManager.address, true);
+    await nft.setApprovalForAll(nftManager.address, true);
     await nftManager.connect(player).equipNFT(1);
     await nftManager.connect(player).equipNFT(2);
 
